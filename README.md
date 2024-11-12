@@ -3,7 +3,7 @@
 
 Amalgamation of files used to properly setup/configure a fresh install of arch linux according to my needs/tastes.
 
-⚠️ **UNDER CONSTRUCTION!** ⚠️
+<p align="center"> ⚠️ **UNDER CONSTRUCTION!** ⚠️ </p>
 
 ![Desktop appearance](https://i.imgur.com/Yb5EtNQ.png)
 
