@@ -1,0 +1,1 @@
+python-pacman==0.6.0

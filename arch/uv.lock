@@ -1,0 +1,19 @@
+version = 1
+requires-python = ">=3.12"
+
+[[package]]
+name = "arch"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "python-pacman" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "python-pacman", specifier = ">=0.6.0" }]
+
+[[package]]
+name = "python-pacman"
+version = "0.6.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/a7/d0/41c416492bd8fe852369add983289a689316acb5d9e497a258e4969a7f8c/python-pacman-0.6.0.tar.gz", hash = "sha256:1e3f6b3f004e35dea1a334b9740de93badc26f7cace89c75c8d5eba0e26e4b1f", size = 2975 }
