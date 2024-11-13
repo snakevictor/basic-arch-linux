@@ -9,10 +9,11 @@ Amalgamation of files used to properly setup/configure a fresh install of arch l
 
 ## Included
 - hyprland
--- hyprpaper
--- hyprlock
+  - hyprpaper
+  - hyprlock
 - waybar
 - rofi (for wayland)
--- rofi themes
+  - rofi themes
 - various custom assets
+  
 ... and more!
