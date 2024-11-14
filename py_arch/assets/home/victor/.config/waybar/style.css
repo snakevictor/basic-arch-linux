@@ -1,0 +1,70 @@
+* {
+    border: 0;
+    border-radius: 0;
+    font-family: "Ubuntu Nerd Font";
+    font-size: 15px;
+    min-height: 0;
+}
+
+#waybar {
+    background: linear-gradient(rgba(0, 0 , 0, 1) 0%, rgba(255, 255, 255, 0) 75%);  /* Transparent background */
+    color: white;  /* Text color */
+}
+
+tooltip {
+    background: rgba(43, 48, 59, 1);
+    border: 1px solid rgba(100, 114, 125, 0.5);
+    border-radius: 8px;
+}
+tooltip label {
+    color: white;
+}
+
+@keyframes gradientAnimation {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 150% 0%; }
+    100% { background-position: 300% 0%; }
+}
+
+
+.modules-right {
+    padding-left: 10px;
+    border-radius: 15px 0px 0px 15px;
+}
+
+.modules-center {
+    padding: 0px 20px;
+    border-radius: 15px 15px 15px 15px;
+}
+
+.modules-left {
+    padding-right: 10px;
+    border-radius: 0px 15px 15px 0px;
+}
+
+.modules-right, .modules-center, .modules-left {
+    margin-top: 0px;
+    /* Define the layers: gradient + wave images */
+    background-image:
+    url("/home/victor/Imagens/wave_transp.png"),
+    url("/home/victor/Imagens/wave.png"),
+    linear-gradient(90deg, rgba(0, 164, 187, 1) 0%, rgba(51, 71, 160, 1) 33%, rgba(152, 61, 147, 1) 66%, rgba(0, 164, 187, 1) 100%);
+
+
+
+    /* Set sizes for each layer independently */
+    background-size: 300% 100%, 400% 100%, 300% 100%; /* Larger gradient size for smoother animation */
+    /* Apply blend mode to combine layers */
+    background-blend-mode: overlay;
+    /* Apply gradient animation */
+    animation: gradientAnimation 15s linear infinite; /* Only animate the gradient */
+}
+
+#workspaces, #window, #clock, #cpu, #temperature, #memory, #bluetooth, #pulseaudio, #custom-gpu {
+    padding: 0px 5px;
+    text-shadow: 1px 1px 3px #000000
+}
+
+#custom-sep {
+    text-shadow: 1px 1px 3px #000000
+}
