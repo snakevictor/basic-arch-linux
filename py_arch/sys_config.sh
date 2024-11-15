@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Author: Victor Monteiro Ribeiro
-# Version: 0.4
+# Version: 0.3
 # Email: victormribeiro.py@gmail.com
 
 workdir=$(pwd)
@@ -64,14 +64,13 @@ if [[ -f "$workdir/packages.txt" ]]; then
     done
 else
     echo "packages.txt not found!"
-    exit 1
+    check_exit
 fi
 
 echo -e "\nInstallation complete!\nBuilding packages from git...\n"
 
 # Git repositories to clone and install
 declare -A gitlist=(
-    ["rofi"]="git clone --depth=1 https://github.com/adi1090x/rofi.git && cd rofi && chmod +x setup.sh && sudo ./setup.sh"
     ["yay"]="sudo pacman -S --needed git base-devel && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si"
 )
 
@@ -80,16 +79,30 @@ for package in "${!gitlist[@]}"; do
     run_bash "${gitlist[$package]}"
 done
 
-# Additional bash commands
+# NOT DONE!!! MIGHT NEED PROPER YAY SETUP BEFORE RUNNING
+read -p "Would you like to install the AUR packages? (y/n) " check_exit
+if [[ $check_exit == "y" ]]; then
+    mapfile -t packages < <(tr ' ' '\n' < "$workdir/packages.txt")
+    echo "${#packages[@]} packages found: ${packages[*]}."
+
+    for package in "${packages[@]}"; do
+        echo -e "\nInstalling $package...\n"
+        run_bash "yes | yay -S $package --noconfirm"
+    done
+fi
+
+# Define the autologin configuration string before declaring bashlist
+AUTLOGIN_CONF="[Service]\nExecStart=\nExecStart=-/sbin/agetty -o '-p -f -- \\\\u' --noclear --autologin $USERNAME %I \$TERM"
+# Declare the bashlist
 declare -A bashlist=(
     ["mkdir_autologin"]="sudo mkdir -p /etc/systemd/system/getty@tty1.service.d"
-    ["create_autologin_conf"]='eval echo -e "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \"-p -f -- \\u\" --noclear --autologin $USERNAME %I $TERM" | sudo tee /etc/systemd/system/getty@tty1.service.d/autologin.conf > /dev/null'
+    ["create_autologin_conf"]="echo -e $'AUTLOGIN_CONF' | sudo tee /etc/systemd/system/getty@tty1.service.d/autologin.conf > /dev/null"
     ["daemon_reload"]="sudo systemctl daemon-reload"
     ["os_prober"]="os-prober"
     ["update_grub"]="sudo grub-mkconfig -o /boot/grub/grub.cfg"
     ["update_initramfs"]="sudo mkinitcpio -p linux-zen"
+    ["vscode_auth_extensions"] ="sudo chown -R $USER:$USER /opt/visual-studio-code/"
 )
-
 for command in "${!bashlist[@]}"; do
     echo -e "\nExecuting ${bashlist[$command]}...\n"
     run_bash "${bashlist[$command]}"
@@ -117,4 +130,3 @@ for i in {5..1}; do
 done
 
 sudo shutdown -r now
-135
