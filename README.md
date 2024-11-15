@@ -5,7 +5,7 @@ Amalgamation of files used to properly setup/configure a fresh install of arch l
 
 <p align="center"> ⚠️ **UNDER CONSTRUCTION!** ⚠️ </p>
 
-![Desktop appearance](https://imgur.com/HXxEKhD)
+![Desktop appearance](https://i.imgur.com/HXxEKhD.png)
 
 ## Included
 - hyprland
