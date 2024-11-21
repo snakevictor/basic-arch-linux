@@ -1,1 +1,2 @@
-visual-studio-code-bin citra
+visual-studio-code-bin citra spotify hyprland-protocols-git slack-desktop
+apache-spark
