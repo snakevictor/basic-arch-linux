@@ -76,6 +76,8 @@ main(){
 
     # Prompt the user for the username
     read -p "Please enter your username: " USERNAME
+    read -p "Please enter your terminal: " TERM
+
     # Ensure the username is not empty
     if [[ -z "$USERNAME" ]]; then
         echo -e "${RED}Error: Username cannot be empty.${OFF}"
@@ -105,7 +107,7 @@ main(){
 
 
     # Install packages from packages.txt
-    install_packages "$workdir/packages.txt"
+    #install_packages "$workdir/packages.txt"
     echo -e "\nAll packages have been installed!\n"
 
     echo -e "\nInstalling YAY...\n"
@@ -129,12 +131,14 @@ main(){
         done
     fi
 
-    echo -e "\n${RED}CHANGING DIRECTORY PERMISSIONS FOR HOME & ETC/default & ETC/modprobe.d & ETC/pacman.d"
-    sudo chown -R $USER:$USER /home
-    sudo chown -R $USER:$USER /etc/default
-    sudo chown -R $USER:$USER /etc/modprobe.d
-    sudo chown -R $USER:$USER /etc/pacman.d
-
+    echo -e "\n${RED}CHANGING DIRECTORY PERMISSIONS FOR HOME & ETC/default & ETC/modprobe.d & ETC/pacman.d${OFF}"
+    
+    folders=("/home" "etc/default/grub" "etc/modprobe.d" "etc/pacman.d/mirrorlist" "etc/systemd/system/getty@tty1.service.d/")
+		
+    for folder in "${folders[@]}"; do
+    	sudo chmod -R u+rwx "$folder"
+    done
+    
     echo -e "\nImporting config files...\n"
     sleep 1
     # Copy assets from repository to system
@@ -152,8 +156,9 @@ main(){
 
     # Declare the bashlist
     declare -A bashlist=(
+        ["enable_getty"]="sudo systemctl enable getty@tty1"
         ["mkdir_autologin"]="sudo mkdir -p /etc/systemd/system/getty@tty1.service.d"
-        ["create_autologin_conf"]="sudo echo -e '[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \"-p -f -- \\\\u\" --noclear --autologin $USERNAME %I $TERM' > /etc/systemd/system/getty@tty1.service.d/autologin.conf"
+        ["create_autologin_conf"]="sudo echo -e '[Service]\nExecStart=\nExecStart=-/sbin/agetty -o \"-p -f -- \\\\u\" --noclear --autologin \$USERNAME %I \$TERM' > /etc/systemd/system/getty@tty1.service.d/autologin.conf"
         ["daemon_reload"]="sudo systemctl daemon-reload"
         ["os_prober"]="sudo os-prober"
         ["vscode_auth_extensions"]="sudo chown -R $USER:$USER /opt/visual-studio-code/"
@@ -162,6 +167,7 @@ main(){
     )
 
     order=(
+        "enable_getty"
         "mkdir_autologin"
         "create_autologin_conf"
         "daemon_reload"
@@ -195,7 +201,13 @@ main(){
 
     # Make the script executable
     run_command "sudo chmod +x /home/$USERNAME/.config/waybar/scripts/nvtop_output.sh"
-
+    
+    for folder in "${folders[@]}"; do
+    	if [ $folder != "/home" ]; then 
+    	    sudo chmod -R -w+x "$folder"
+    	fi
+    done
+    
     # Final message before reboot
     echo -e "${GREEN}\nAll done! Do you want to reboot?(y/n)\n${OFF}"
     read -p "" reboot
